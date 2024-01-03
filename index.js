@@ -10,11 +10,12 @@ import {
 dotenv.config();
 const app = express();
 app.use(cors());
-const port = 6868;
+const port = 6869;
 const nodeEnv = process.env.MONGO_URI;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const uri = nodeEnv;
+console.log(uri);
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -23,15 +24,14 @@ const client = new MongoClient(uri, {
   },
 });
 
-const connectWithRetry = () => {
-  return client.connect()
-    .then(() => {
-      console.log('Connected to MongoDB');
-    })
-    .catch(err => {
-      console.error('Error connecting to MongoDB:', err);
-      setTimeout(connectWithRetry, 5000);
-    });
+const connectWithRetry = async () => {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+    setTimeout(connectWithRetry, 5000);
+  }
 };
 connectWithRetry();
 
@@ -394,5 +394,5 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  res.send("PC builder application running successfully on ",port);
+  res.send("PC builder application running successfully");
 });
