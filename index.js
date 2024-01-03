@@ -394,5 +394,5 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  res.send("This project is running successfully");
+  res.send("PC builder application running successfully on ",port);
 });
